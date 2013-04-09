@@ -21,6 +21,10 @@
 		4D653CE01713F97400D5BEF9 /* SVCameraPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CDF1713F97400D5BEF9 /* SVCameraPreviewController.m */; };
 		4D653CE31714006300D5BEF9 /* SVCameraFinderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CE21714006300D5BEF9 /* SVCameraFinderView.m */; };
 		4D653CE8171403B500D5BEF9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D653CE6171403A800D5BEF9 /* MobileCoreServices.framework */; };
+		4D653CEB1714779A00D5BEF9 /* SVTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CEA1714779A00D5BEF9 /* SVTabView.m */; };
+		4D653CEE17147CE600D5BEF9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D653CEC17147CDF00D5BEF9 /* QuartzCore.framework */; };
+		4D653CF41714858700D5BEF9 /* SVClearBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CF31714858700D5BEF9 /* SVClearBoxView.m */; };
+		4DF6A43E1714949B004DEA8E /* button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DF6A43D1714949B004DEA8E /* button@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +50,12 @@
 		4D653CE11714006300D5BEF9 /* SVCameraFinderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVCameraFinderView.h; sourceTree = "<group>"; };
 		4D653CE21714006300D5BEF9 /* SVCameraFinderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVCameraFinderView.m; sourceTree = "<group>"; };
 		4D653CE6171403A800D5BEF9 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		4D653CE91714779A00D5BEF9 /* SVTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVTabView.h; sourceTree = "<group>"; };
+		4D653CEA1714779A00D5BEF9 /* SVTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVTabView.m; sourceTree = "<group>"; };
+		4D653CEC17147CDF00D5BEF9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4D653CF21714858700D5BEF9 /* SVClearBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVClearBoxView.h; sourceTree = "<group>"; };
+		4D653CF31714858700D5BEF9 /* SVClearBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVClearBoxView.m; sourceTree = "<group>"; };
+		4DF6A43D1714949B004DEA8E /* button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D653CEE17147CE600D5BEF9 /* QuartzCore.framework in Frameworks */,
 				4D653CE8171403B500D5BEF9 /* MobileCoreServices.framework in Frameworks */,
 				4D653CBC1713F8D200D5BEF9 /* UIKit.framework in Frameworks */,
 				4D653CBE1713F8D200D5BEF9 /* Foundation.framework in Frameworks */,
@@ -83,6 +94,7 @@
 		4D653CBA1713F8D200D5BEF9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D653CEC17147CDF00D5BEF9 /* QuartzCore.framework */,
 				4D653CE6171403A800D5BEF9 /* MobileCoreServices.framework */,
 				4D653CBB1713F8D200D5BEF9 /* UIKit.framework */,
 				4D653CBD1713F8D200D5BEF9 /* Foundation.framework */,
@@ -104,6 +116,7 @@
 		4D653CC21713F8D200D5BEF9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4DF6A43D1714949B004DEA8E /* button@2x.png */,
 				4D653CC31713F8D200D5BEF9 /* CameraViewFinder-Info.plist */,
 				4D653CC41713F8D200D5BEF9 /* InfoPlist.strings */,
 				4D653CC71713F8D200D5BEF9 /* main.m */,
@@ -135,6 +148,10 @@
 			children = (
 				4D653CE11714006300D5BEF9 /* SVCameraFinderView.h */,
 				4D653CE21714006300D5BEF9 /* SVCameraFinderView.m */,
+				4D653CE91714779A00D5BEF9 /* SVTabView.h */,
+				4D653CEA1714779A00D5BEF9 /* SVTabView.m */,
+				4D653CF21714858700D5BEF9 /* SVClearBoxView.h */,
+				4D653CF31714858700D5BEF9 /* SVClearBoxView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -195,6 +212,7 @@
 				4D653CCE1713F8D200D5BEF9 /* Default.png in Resources */,
 				4D653CD01713F8D200D5BEF9 /* Default@2x.png in Resources */,
 				4D653CD21713F8D200D5BEF9 /* Default-568h@2x.png in Resources */,
+				4DF6A43E1714949B004DEA8E /* button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +229,8 @@
 				4D653CDD1713F95C00D5BEF9 /* SVCameraOverlayController.m in Sources */,
 				4D653CE01713F97400D5BEF9 /* SVCameraPreviewController.m in Sources */,
 				4D653CE31714006300D5BEF9 /* SVCameraFinderView.m in Sources */,
+				4D653CEB1714779A00D5BEF9 /* SVTabView.m in Sources */,
+				4D653CF41714858700D5BEF9 /* SVClearBoxView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
