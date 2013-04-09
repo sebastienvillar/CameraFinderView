@@ -7,35 +7,61 @@
 //
 
 #import "SVCameraFinderView.h"
+#import "SVClearBoxView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface SVCameraFinderView ()
-@property (assign, readwrite) CGPathRef finder;
+@property (strong, readwrite) SVClearBoxView* clearBoxView;
+@property (strong, readwrite) CADisplayLink* timer;
 @end
 
 @implementation SVCameraFinderView
+@synthesize clearBoxView = _clearBoxView,
+			animating = _animating;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+		_animating = NO;
 		self.backgroundColor = [UIColor clearColor];
-		[self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+		_clearBoxView = [[SVClearBoxView alloc] init];
+		[self addSubview:_clearBoxView];
     }
     return self;
 }
 
 - (void)drawRect:(CGRect)rect
 {
-	UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, innerBorder, innerBorder) cornerRadius:finderCornerRadius];
-	path.lineWidth = 5;
-	[[UIColor colorWithWhite:1.0 alpha:0.5] setStroke];
-	[path stroke];
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGRect frame = self.clearBoxView.frame;
+	if (self.isAnimating) {
+		CALayer* layer = (CALayer*)self.clearBoxView.layer.presentationLayer;
+		frame = layer.frame;
+	}
+	CGMutablePathRef outerPath = CGPathCreateMutable();
+	CGPathAddRect(outerPath, NULL, self.bounds);
+	UIBezierPath* clearPath = [UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:finderCornerRadius];
+	CGPathAddPath(outerPath, NULL, clearPath.CGPath);
+	[[UIColor colorWithWhite:0.0 alpha:0.8] setFill];
+	CGContextAddPath(context, outerPath);
+	CGContextEOFillPath(context);
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if ([keyPath isEqualToString:@"frame"]) {
-		[self setNeedsDisplay];
+- (void)setAnimating:(BOOL)animating {
+	if (animating) {
+		self.timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
+		self.timer.frameInterval = 1;
+		[self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 	}
+	else {
+		[self.timer invalidate];
+	}
+	_animating = animating;
+}
+
+- (BOOL)isAnimating {
+	return _animating;
 }
 
 - (void)dealloc {

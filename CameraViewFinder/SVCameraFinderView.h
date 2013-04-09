@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
-#define finderCornerRadius 10
-#define innerBorder 5
+#import "SVClearBoxView.h"
 
 @interface SVCameraFinderView : UIView
+@property (strong, readonly) SVClearBoxView* clearBoxView;
+@property (assign, readwrite, getter = isAnimating) BOOL animating;
 @end

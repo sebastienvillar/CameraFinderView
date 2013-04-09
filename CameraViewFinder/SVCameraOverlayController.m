@@ -8,6 +8,7 @@
 
 #import "SVCameraOverlayController.h"
 #import "SVCameraFinderView.h"
+#import "SVTabView.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
 
@@ -49,27 +50,14 @@
 	if (!UIDeviceOrientationIsValidInterfaceOrientation(orientation)) {
 		return;
 	}
-	CGRect bounds = self.overlayView.bounds;
 	
 	//Resize cameraFinder view
 	[UIView animateWithDuration:0.3 animations:^{
-		if (UIDeviceOrientationIsLandscape(orientation)) {
-			CGSize cameraFinderSize = CGSizeMake((bounds.size.height - (cameraFinderBorderWidth * 2) - cameraControlHeight568) / cameraFinderWidthToHeightRatio,
-												 (bounds.size.height - cameraFinderBorderWidth * 2) - cameraControlHeight568);
-			
-			self.cameraFinderView.frame = CGRectMake((bounds.size.width)/2 - cameraFinderSize.width/2,
-													 cameraFinderBorderWidth,
-													 cameraFinderSize.width,
-													 cameraFinderSize.height);
-		}
-		else {
-			CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
-												 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
-			
-			self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
-													 (bounds.size.height - cameraControlHeight568) / 2 - cameraFinderSize.height/2,
-													 cameraFinderSize.width,
-													 cameraFinderSize.height);
+		self.cameraFinderView.animating = YES;
+		[self viewWillLayoutSubviews];
+	} completion:^(BOOL isFinished) {
+		if (isFinished) {
+			self.cameraFinderView.animating = NO;
 		}
 	}];
 }
@@ -99,7 +87,7 @@
 }
 
 - (UIImage*)croppedImageToFinder:(UIImage*)image {
-	CGRect finderRect = self.cameraFinderView.frame;
+	CGRect finderRect = self.cameraFinderView.clearBoxView.frame;
 	float ratio;
 	if (image.size.height > image.size.width) {
 		ratio = image.size.height / (self.overlayView.frame.size.height - self.overlayControlsView.frame.size.height);
@@ -120,7 +108,7 @@
 									   CGRectGetHeight(finderRect) * ratio);
 	
 	//Take half of the border in the picture
-	realFinderRect = CGRectInset(realFinderRect, innerBorder/2 * ratio, innerBorder/2 * ratio);
+	realFinderRect = CGRectInset(realFinderRect, innerBorder * ratio, innerBorder * ratio);
 	UIBezierPath* translatedFinderBezier = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,
 																							  CGRectGetWidth(realFinderRect),
 																							  CGRectGetHeight(realFinderRect))
@@ -152,20 +140,26 @@
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor blackColor];
 	self.overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
-	self.overlayControlsView = [[UIView alloc] initWithFrame:CGRectMake(0,
+	self.cameraFinderView = [[SVCameraFinderView alloc] initWithFrame:CGRectMake(0, 0,
+																		self.overlayView.frame.size.width,
+																		self.overlayView.frame.size.height - cameraControlHeight568)];
+	self.overlayControlsView = [[SVTabView alloc] initWithFrame:CGRectMake(0,
 																	   self.overlayView.frame.size.height - cameraControlHeight568,
 																	   self.overlayView.frame.size.width,
 																	   cameraControlHeight568)];
-	self.cameraFinderView = [[SVCameraFinderView alloc] init];
-	self.takePictureButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+	self.takePictureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	UIImage* buttonImage = [[UIImage imageNamed:@"button.png"]
+								  resizableImageWithCapInsets:UIEdgeInsetsMake(0, 30, 0, 30)
+								  resizingMode:UIImageResizingModeTile];
+	[self.takePictureButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
 	[self.takePictureButton setTitle:@"Take Picture" forState:UIControlStateNormal];
+	[self.takePictureButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[self.takePictureButton addTarget:self.imagePickerController
 							   action:@selector(takePicture)
 					 forControlEvents:UIControlEventTouchUpInside];
 	
 	[self.overlayControlsView addSubview:self.takePictureButton];
 	[self.overlayView addSubview:self.overlayControlsView];
-	self.overlayControlsView.backgroundColor = [UIColor grayColor];
 	[self.overlayView addSubview:self.cameraFinderView];
 }
 
@@ -173,15 +167,16 @@
 	[super viewWillLayoutSubviews];
 	CGRect bounds = self.overlayView.bounds;
 	CGRect controlsBounds = self.overlayControlsView.bounds;
-	CGSize buttonSize = CGSizeMake(125, 50);
+	CGSize buttonSize = CGSizeMake(125, 52);
 	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+	
 
 	//Set the cameraFinderView's frame according to the device orientation
 	if (UIDeviceOrientationIsLandscape(orientation)) {
 		CGSize cameraFinderSize = CGSizeMake((bounds.size.height - (cameraFinderBorderWidth * 2) - cameraControlHeight568) / cameraFinderWidthToHeightRatio,
 											 (bounds.size.height - cameraFinderBorderWidth * 2) - cameraControlHeight568);
 		
-		self.cameraFinderView.frame = CGRectMake((bounds.size.width)/2 - cameraFinderSize.width/2,
+		self.cameraFinderView.clearBoxView.frame = CGRectMake((bounds.size.width)/2 - cameraFinderSize.width/2,
 												 cameraFinderBorderWidth,
 												 cameraFinderSize.width,
 												 cameraFinderSize.height);
@@ -190,7 +185,7 @@
 		CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
 											 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
 		
-		self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
+		self.cameraFinderView.clearBoxView.frame = CGRectMake(cameraFinderBorderWidth,
 												 (bounds.size.height - cameraControlHeight568)/ 2 - cameraFinderSize.height/2,
 												 cameraFinderSize.width,
 												 cameraFinderSize.height);
