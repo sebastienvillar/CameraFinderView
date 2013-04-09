@@ -46,7 +46,7 @@ cameraSupported = _cameraSupported;
 		return;
 	}
 	
-	//Resize cameraFinder view
+	//Layout the overlay with animation
 	[UIView animateWithDuration:0.3 animations:^{
 		self.cameraFinderView.animating = YES;
 		[self viewWillLayoutSubviews];
@@ -84,6 +84,8 @@ cameraSupported = _cameraSupported;
 - (UIImage*)croppedImageToFinder:(UIImage*)image {
 	CGRect finderRect = self.cameraFinderView.clearBoxView.frame;
 	float ratio;
+	
+	//Get the right ratio. Depends on the picture orientation
 	if (image.size.height > image.size.width) {
 		ratio = image.size.height / (self.overlayView.frame.size.height - self.overlayControlsView.frame.size.height);
 	}
@@ -191,7 +193,6 @@ cameraSupported = _cameraSupported;
 - (void)viewWillLayoutSubviews {
 	[super viewWillLayoutSubviews];
 	if (!self.isCameraSupported) {
-		NSLog(@"will layout");
 		return;
 	}
 	CGRect bounds = self.overlayView.bounds;
@@ -200,7 +201,7 @@ cameraSupported = _cameraSupported;
 	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
 	
 
-	//Set the cameraFinderView's frame according to the device orientation
+	//Set the clearBox frame according to the device orientation
 	if (UIDeviceOrientationIsLandscape(orientation)) {
 		CGSize cameraFinderSize = CGSizeMake((bounds.size.height - (cameraFinderBorderWidth * 2) - controlsBounds.size.height) / cameraFinderWidthToHeightRatio,
 											 (bounds.size.height - cameraFinderBorderWidth * 2) - controlsBounds.size.height);

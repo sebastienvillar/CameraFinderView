@@ -50,6 +50,8 @@
 
 - (void)setAnimating:(BOOL)animating {
 	if (animating) {
+		//Add a "frame timer" to draw when the frame changes.
+		//Probably not the best way to do it
 		self.timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
 		self.timer.frameInterval = 1;
 		[self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
