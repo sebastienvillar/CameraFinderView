@@ -59,9 +59,11 @@
 - (void)cameraOverlayController:(SVCameraOverlayController *)controller didTakePicture:(UIImage *)image {
 	if (!self.cameraPreviewController) {
 		self.cameraPreviewController = [[SVCameraPreviewController alloc] init];
+		[self addChildViewController:self.cameraPreviewController];
 		self.cameraPreviewController.view.frame = self.view.bounds;
 		[self.view addSubview:self.cameraPreviewController.view];
 		self.cameraPreviewController.delegate = self;
+		[self.cameraPreviewController didMoveToParentViewController:self];
 	}
 	[self.cameraPreviewController loadImage:image];
 	[UIApplication sharedApplication].statusBarHidden = NO;

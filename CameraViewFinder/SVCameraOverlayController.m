@@ -102,7 +102,7 @@
 	CGRect finderRect = self.cameraFinderView.frame;
 	float ratio;
 	if (image.size.height > image.size.width) {
-		ratio = image.size.width / (self.overlayView.frame.size.width - self.overlayControlsView.frame.size.height);
+		ratio = image.size.height / (self.overlayView.frame.size.height - self.overlayControlsView.frame.size.height);
 	}
 	else {
 		ratio = image.size.width / (self.overlayView.frame.size.height - self.overlayControlsView.frame.size.height);
@@ -120,24 +120,17 @@
 									   CGRectGetHeight(finderRect) * ratio);
 	
 	//Take half of the border in the picture
-	//realFinderRect = CGRectInset(realFinderRect, innerBorder/2 * ratio, innerBorder/2 * ratio);
+	realFinderRect = CGRectInset(realFinderRect, innerBorder/2 * ratio, innerBorder/2 * ratio);
 	UIBezierPath* translatedFinderBezier = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,
 																							  CGRectGetWidth(realFinderRect),
 																							  CGRectGetHeight(realFinderRect))
 																	  cornerRadius:finderCornerRadius * ratio];
-	NSLog(@"rect : %@", NSStringFromCGRect(self.cameraFinderView.frame));
-	NSLog(@"%@", NSStringFromCGSize(image.size));
-	NSLog(@"%@", NSStringFromCGRect(self.overlayView.frame));
-	NSLog(@"%@", NSStringFromCGRect(realFinderRect));
-	UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:realFinderRect cornerRadius:finderCornerRadius * ratio];
-	UIGraphicsBeginImageContext(image.size);
+	UIGraphicsBeginImageContext(realFinderRect.size);
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	[[UIColor blackColor] setFill];
 	CGContextFillRect(context, CGRectMake(0, 0, image.size.width, image.size.height));
-	//[translatedFinderBezier addClip];
-	[bezierPath addClip];
-	//[image drawAtPoint:CGPointMake(-CGRectGetMinX(realFinderRect), -CGRectGetMinY(realFinderRect))];
-	[image drawAtPoint:CGPointZero];
+	[translatedFinderBezier addClip];
+	[image drawAtPoint:CGPointMake(-CGRectGetMinX(realFinderRect), -CGRectGetMinY(realFinderRect))];
 	UIImage* croppedImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	return croppedImage;

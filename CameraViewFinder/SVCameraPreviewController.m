@@ -28,6 +28,7 @@
 	if (self) {
 		_imageView = [[UIImageView alloc] init];
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
+		_imageView.translatesAutoresizingMaskIntoConstraints = NO;
 	}
 	return self;
 }
@@ -35,27 +36,69 @@
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor blackColor];
+	self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 	self.controlsView = [[UIView alloc] init];
+	self.controlsView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.retryButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[self.retryButton setTitle:@"Retry" forState:UIControlStateNormal];
 	[self.retryButton addTarget:self action:@selector(retry) forControlEvents:UIControlEventTouchUpInside];
+	self.retryButton.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	self.saveButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[self.saveButton setTitle:@"Save to camera roll" forState:UIControlStateNormal];
 	[self.saveButton addTarget:self action:@selector(save) forControlEvents:UIControlEventTouchUpInside];
+	self.saveButton.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	self.controlsView.backgroundColor = [UIColor grayColor];
 	[self.controlsView addSubview:self.retryButton];
 	[self.controlsView addSubview:self.saveButton];
 	[self.view addSubview:self.controlsView];
 	[self.view addSubview:self.imageView];
+	NSArray* objects = [NSArray arrayWithObjects:self.imageView, self.controlsView, self.retryButton, self.saveButton, nil];
+	NSArray* keys = [NSArray arrayWithObjects:@"imageView", @"controlsView", @"retryButton", @"saveButton", nil];
+	NSDictionary* views = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+	NSArray* imageViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[imageView]-|"
+																			options:0
+																			metrics:nil views:views];
+	NSArray* controlsViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[controlsView]|"
+																			   options:0
+																			   metrics:nil views:views];
+	
+	NSArray* buttonsHorizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-25-[retryButton]-[saveButton]-25-|"
+																			   options:0
+																			   metrics:nil views:views];
+	NSLayoutConstraint* retryCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.retryButton
+																			  attribute:NSLayoutAttributeCenterY
+																				relatedBy:NSLayoutRelationEqual
+																				   toItem:self.controlsView
+																				attribute:NSLayoutAttributeCenterY
+																			   multiplier:1.0
+																				 constant:0.0];
+	
+	NSLayoutConstraint* saveCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.saveButton
+																			  attribute:NSLayoutAttributeCenterY
+																			  relatedBy:NSLayoutRelationEqual
+																				 toItem:self.controlsView
+																			  attribute:NSLayoutAttributeCenterY
+																			 multiplier:1.0
+																			   constant:0.0];
+	NSArray* overallConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[imageView]-[controlsView(70)]|"
+																		  options:0
+																		  metrics:nil
+																			views:views];
+	[self.view addConstraints:controlsViewConstraints];
+	[self.view addConstraints:imageViewConstraints];
+	[self.view addConstraints:overallConstraints];
+	[self.view addConstraint:retryCenterYConstraint];
+	[self.view addConstraint:saveCenterYConstraint];
+	[self.view addConstraints:buttonsHorizontalConstraints];
 }
 
 - (void)loadImage:(UIImage*)image {
 	self.imageView.image = image;
 }
 
-- (void)viewWillLayoutSubviews {
+/*- (void)viewWillLayoutSubviews {
 	[super viewWillLayoutSubviews];
 	CGSize boundsSize = self.view.bounds.size;
 	CGSize controlsViewSize = CGSizeMake(boundsSize.width, 80);
@@ -75,7 +118,11 @@
 	self.saveButton.frame = CGRectMake(controlsViewSize.width - saveButtonSize.width - 25,
 										controlsViewSize.height/2 - saveButtonSize.height/2,
 										saveButtonSize.width, saveButtonSize.height);
-}
+	
+
+	
+
+}*/
 
 - (void)viewDidLoad
 {
