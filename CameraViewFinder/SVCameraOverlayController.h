@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SVCameraOverlayController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@class SVCameraOverlayController;
 
+@protocol SVCameraOverlayControllerDelegate <NSObject>
+- (void)cameraController:(SVCameraOverlayController*)controller didTakePicture:(UIImage*)image;
+@end
+
+@interface SVCameraOverlayController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@property (weak, readwrite) id delegate;
 @end

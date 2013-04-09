@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SVCameraFinderView : UIView
+#define finderCornerRadius 10
+#define innerBorder 5
 
+@interface SVCameraFinderView : UIView
 @end

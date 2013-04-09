@@ -98,10 +98,59 @@
 	return YES;
 }
 
+- (UIImage*)croppedImageToFinder:(UIImage*)image {
+	CGRect finderRect = self.cameraFinderView.frame;
+	finderRect.size.width -= 2 * innerBorder;
+	finderRect.size.height -= 2 * innerBorder;
+	float ratio;
+	if (image.size.height > image.size.width) {
+		ratio = image.size.height / (self.overlayView.frame.size.height - cameraControlHeight568);
+	}
+	else {
+		ratio = image.size.width / (self.overlayView.frame.size.height - cameraControlHeight568);
+		finderRect = CGRectMake(CGRectGetMinX(finderRect),
+								CGRectGetMinY(finderRect),
+								finderRect.size.height,
+								finderRect.size.width);
+	}
+	CGPoint imageCenter = CGPointMake(image.size.width/2, image.size.height/2);
+	
+	//Create a new rect to match the real photo size
+	CGRect realFinderRect = CGRectMake(imageCenter.x - (CGRectGetWidth(finderRect)/2 * ratio),
+									   imageCenter.y - (CGRectGetHeight(finderRect)/2 * ratio),
+									   CGRectGetWidth(finderRect) * ratio,
+									   CGRectGetHeight(finderRect) * ratio);
+	UIBezierPath* translatedFinderBezier = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,
+																							  CGRectGetWidth(realFinderRect),
+																							  CGRectGetHeight(realFinderRect))
+																	  cornerRadius:finderCornerRadius * ratio];
+	UIGraphicsBeginImageContext(realFinderRect.size);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	[[UIColor blackColor] setFill];
+	CGContextFillRect(context, CGRectMake(0, 0, image.size.width, image.size.height));
+	[translatedFinderBezier addClip];
+	[image drawAtPoint:CGPointMake(-CGRectGetMinX(realFinderRect), -CGRectGetMinY(realFinderRect))];
+	UIImage* croppedImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	UIImageWriteToSavedPhotosAlbum(croppedImage, nil, nil, nil);
+	return croppedImage;
+}
+
 #pragma mark - Overwritten methods
+
+//Hack to hide the overlay during the shutter animation
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (!viewController)
+        return;
+	
+    UIView* controllerCameraView = [[viewController.view subviews] objectAtIndex:0];
+    UIView* controllerPreview = [[viewController.view subviews] objectAtIndex:0];
+    [controllerCameraView insertSubview:self.overlayView aboveSubview:controllerPreview];
+}
 
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	self.view.backgroundColor = [UIColor blackColor];
 	self.overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
 	self.overlayControlsView = [[UIView alloc] initWithFrame:CGRectMake(0,
 																	   self.overlayView.frame.size.height - cameraControlHeight568,
@@ -110,15 +159,18 @@
 	self.cameraFinderView = [[SVCameraFinderView alloc] init];
 	self.takePictureButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[self.takePictureButton setTitle:@"Take Picture" forState:UIControlStateNormal];
+	[self.takePictureButton addTarget:self.imagePickerController
+							   action:@selector(takePicture)
+					 forControlEvents:UIControlEventTouchUpInside];
 	
 	[self.overlayControlsView addSubview:self.takePictureButton];
 	[self.overlayView addSubview:self.overlayControlsView];
 	self.overlayControlsView.backgroundColor = [UIColor grayColor];
 	[self.overlayView addSubview:self.cameraFinderView];
-	self.imagePickerController.cameraOverlayView = self.overlayView;
 }
 
 - (void)viewWillLayoutSubviews {
+	[super viewWillLayoutSubviews];
 	CGRect bounds = self.overlayView.bounds;
 	CGRect controlsBounds = self.overlayControlsView.bounds;
 	CGSize buttonSize = CGSizeMake(125, 50);
@@ -156,12 +208,23 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+	[self viewWillLayoutSubviews];
 	[self presentViewController:self.imagePickerController animated:NO completion:NULL];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+	UIImage* originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+	UIImage* croppedImage = [self croppedImageToFinder:originalImage];
+	if (self.delegate && [self.delegate respondsToSelector:@selector(cameraController:didTakePicture:)]) {
+		[self.delegate cameraController:self didTakePicture:croppedImage];
+	}
 }
 
 @end

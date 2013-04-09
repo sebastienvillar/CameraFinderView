@@ -8,6 +8,10 @@
 
 #import "SVCameraFinderView.h"
 
+@interface SVCameraFinderView ()
+@property (assign, readwrite) CGPathRef finder;
+@end
+
 @implementation SVCameraFinderView
 
 - (id)initWithFrame:(CGRect)frame
@@ -22,7 +26,7 @@
 
 - (void)drawRect:(CGRect)rect
 {
-	UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, 5, 5) cornerRadius:10];
+	UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, innerBorder, innerBorder) cornerRadius:finderCornerRadius];
 	path.lineWidth = 5;
 	[[UIColor colorWithWhite:1.0 alpha:0.5] setStroke];
 	[path stroke];

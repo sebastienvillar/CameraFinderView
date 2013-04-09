@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SVCameraOverlayController.h"
+#import "SVCameraPreviewController.h"
 
-@interface SVRootController : UIViewController
+@interface SVRootController : UIViewController <SVCameraOverlayControllerDelegate>
 
 @end

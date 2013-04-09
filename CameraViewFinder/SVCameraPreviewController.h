@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SVCameraPreviewController : UIViewController
-
+- (void)loadImage:(UIImage*)image;
 @end
