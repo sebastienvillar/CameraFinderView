@@ -1,5 +1,5 @@
 //
-//  SVCameraOverlayController.h
+//  SVCameraFinderView.h
 //  CameraViewFinder
 //
 //  Created by Sébastien Villar on 9/04/13.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SVCameraOverlayController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface SVCameraFinderView : UIView
 
 @end
