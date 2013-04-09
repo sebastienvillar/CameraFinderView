@@ -16,6 +16,11 @@
 		4D653CCE1713F8D200D5BEF9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D653CCD1713F8D200D5BEF9 /* Default.png */; };
 		4D653CD01713F8D200D5BEF9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D653CCF1713F8D200D5BEF9 /* Default@2x.png */; };
 		4D653CD21713F8D200D5BEF9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D653CD11713F8D200D5BEF9 /* Default-568h@2x.png */; };
+		4D653CDA1713F8FE00D5BEF9 /* SVRootController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CD91713F8FE00D5BEF9 /* SVRootController.m */; };
+		4D653CDD1713F95C00D5BEF9 /* SVCameraOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CDC1713F95C00D5BEF9 /* SVCameraOverlayController.m */; };
+		4D653CE01713F97400D5BEF9 /* SVCameraPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CDF1713F97400D5BEF9 /* SVCameraPreviewController.m */; };
+		4D653CE31714006300D5BEF9 /* SVCameraFinderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D653CE21714006300D5BEF9 /* SVCameraFinderView.m */; };
+		4D653CE8171403B500D5BEF9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D653CE6171403A800D5BEF9 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +37,15 @@
 		4D653CCD1713F8D200D5BEF9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		4D653CCF1713F8D200D5BEF9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		4D653CD11713F8D200D5BEF9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		4D653CD81713F8FE00D5BEF9 /* SVRootController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRootController.h; sourceTree = "<group>"; };
+		4D653CD91713F8FE00D5BEF9 /* SVRootController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRootController.m; sourceTree = "<group>"; };
+		4D653CDB1713F95C00D5BEF9 /* SVCameraOverlayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVCameraOverlayController.h; sourceTree = "<group>"; };
+		4D653CDC1713F95C00D5BEF9 /* SVCameraOverlayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVCameraOverlayController.m; sourceTree = "<group>"; };
+		4D653CDE1713F97400D5BEF9 /* SVCameraPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVCameraPreviewController.h; sourceTree = "<group>"; };
+		4D653CDF1713F97400D5BEF9 /* SVCameraPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVCameraPreviewController.m; sourceTree = "<group>"; };
+		4D653CE11714006300D5BEF9 /* SVCameraFinderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVCameraFinderView.h; sourceTree = "<group>"; };
+		4D653CE21714006300D5BEF9 /* SVCameraFinderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVCameraFinderView.m; sourceTree = "<group>"; };
+		4D653CE6171403A800D5BEF9 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D653CE8171403B500D5BEF9 /* MobileCoreServices.framework in Frameworks */,
 				4D653CBC1713F8D200D5BEF9 /* UIKit.framework in Frameworks */,
 				4D653CBE1713F8D200D5BEF9 /* Foundation.framework in Frameworks */,
 				4D653CC01713F8D200D5BEF9 /* CoreGraphics.framework in Frameworks */,
@@ -68,6 +83,7 @@
 		4D653CBA1713F8D200D5BEF9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D653CE6171403A800D5BEF9 /* MobileCoreServices.framework */,
 				4D653CBB1713F8D200D5BEF9 /* UIKit.framework */,
 				4D653CBD1713F8D200D5BEF9 /* Foundation.framework */,
 				4D653CBF1713F8D200D5BEF9 /* CoreGraphics.framework */,
@@ -78,8 +94,8 @@
 		4D653CC11713F8D200D5BEF9 /* CameraViewFinder */ = {
 			isa = PBXGroup;
 			children = (
-				4D653CCA1713F8D200D5BEF9 /* SVAppDelegate.h */,
-				4D653CCB1713F8D200D5BEF9 /* SVAppDelegate.m */,
+				4D653CE41714006D00D5BEF9 /* Controllers */,
+				4D653CE51714007100D5BEF9 /* Views */,
 				4D653CC21713F8D200D5BEF9 /* Supporting Files */,
 			);
 			path = CameraViewFinder;
@@ -97,6 +113,30 @@
 				4D653CD11713F8D200D5BEF9 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4D653CE41714006D00D5BEF9 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4D653CCA1713F8D200D5BEF9 /* SVAppDelegate.h */,
+				4D653CCB1713F8D200D5BEF9 /* SVAppDelegate.m */,
+				4D653CD81713F8FE00D5BEF9 /* SVRootController.h */,
+				4D653CD91713F8FE00D5BEF9 /* SVRootController.m */,
+				4D653CDB1713F95C00D5BEF9 /* SVCameraOverlayController.h */,
+				4D653CDC1713F95C00D5BEF9 /* SVCameraOverlayController.m */,
+				4D653CDE1713F97400D5BEF9 /* SVCameraPreviewController.h */,
+				4D653CDF1713F97400D5BEF9 /* SVCameraPreviewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		4D653CE51714007100D5BEF9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4D653CE11714006300D5BEF9 /* SVCameraFinderView.h */,
+				4D653CE21714006300D5BEF9 /* SVCameraFinderView.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +207,10 @@
 			files = (
 				4D653CC81713F8D200D5BEF9 /* main.m in Sources */,
 				4D653CCC1713F8D200D5BEF9 /* SVAppDelegate.m in Sources */,
+				4D653CDA1713F8FE00D5BEF9 /* SVRootController.m in Sources */,
+				4D653CDD1713F95C00D5BEF9 /* SVCameraOverlayController.m in Sources */,
+				4D653CE01713F97400D5BEF9 /* SVCameraPreviewController.m in Sources */,
+				4D653CE31714006300D5BEF9 /* SVCameraFinderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +325,7 @@
 				4D653CD71713F8D200D5BEF9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -44,11 +44,14 @@
 }
 
 - (void)orientationDidChange {
+	//Check device orientation because presented controller catches the orientation events
 	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
 	if (!UIDeviceOrientationIsValidInterfaceOrientation(orientation)) {
 		return;
 	}
 	CGRect bounds = self.overlayView.bounds;
+	
+	//Resize cameraFinder view
 	[UIView animateWithDuration:0.3 animations:^{
 		if (UIDeviceOrientationIsLandscape(orientation)) {
 			CGSize cameraFinderSize = CGSizeMake((bounds.size.height - (cameraFinderBorderWidth * 2) - cameraControlHeight568) / cameraFinderWidthToHeightRatio,
@@ -71,6 +74,8 @@
 	}];
 }
 
+//Return YES if the device is supports the camera. NO otherwise
+//If YES, configure the imagePickerController
 - (BOOL)configureImagePicker {
 	if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
 		return NO;
@@ -92,6 +97,8 @@
 	self.imagePickerController.delegate = self;
 	return YES;
 }
+
+#pragma mark - Overwritten methods
 
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
@@ -117,6 +124,7 @@
 	CGSize buttonSize = CGSizeMake(125, 50);
 	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
 
+	//Set the cameraFinderView's frame according to the device orientation
 	if (UIDeviceOrientationIsPortrait(orientation)) {
 		CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
 											 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);

@@ -28,10 +28,6 @@
 	return self;
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
-	return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)loadViewController:(UIViewController*)controller {
 	[self addChildViewController:controller];
 	controller.view.frame = self.view.frame;
@@ -39,6 +35,7 @@
 	[controller didMoveToParentViewController:self];
 }
 
+#pragma mark - Overwritten methods
 
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
@@ -53,6 +50,10 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+	return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

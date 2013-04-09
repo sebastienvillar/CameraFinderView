@@ -20,7 +20,6 @@
     return self;
 }
 
-
 - (void)drawRect:(CGRect)rect
 {
 	UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, 5, 5) cornerRadius:10];
