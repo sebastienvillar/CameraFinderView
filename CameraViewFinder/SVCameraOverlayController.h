@@ -11,7 +11,7 @@
 @class SVCameraOverlayController;
 
 @protocol SVCameraOverlayControllerDelegate <NSObject>
-- (void)cameraController:(SVCameraOverlayController*)controller didTakePicture:(UIImage*)image;
+- (void)cameraOverlayController:(SVCameraOverlayController*)controller didTakePicture:(UIImage*)image;
 @end
 
 @interface SVCameraOverlayController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>

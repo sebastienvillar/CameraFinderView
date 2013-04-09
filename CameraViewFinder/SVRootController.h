@@ -10,6 +10,6 @@
 #import "SVCameraOverlayController.h"
 #import "SVCameraPreviewController.h"
 
-@interface SVRootController : UIViewController <SVCameraOverlayControllerDelegate>
+@interface SVRootController : UIViewController <SVCameraOverlayControllerDelegate, SVCameraPreviewControllerDelegate>
 
 @end

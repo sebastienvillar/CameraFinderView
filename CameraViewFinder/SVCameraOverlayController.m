@@ -132,7 +132,6 @@
 	[image drawAtPoint:CGPointMake(-CGRectGetMinX(realFinderRect), -CGRectGetMinY(realFinderRect))];
 	UIImage* croppedImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
-	UIImageWriteToSavedPhotosAlbum(croppedImage, nil, nil, nil);
 	return croppedImage;
 }
 
@@ -222,8 +221,8 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
 	UIImage* originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
 	UIImage* croppedImage = [self croppedImageToFinder:originalImage];
-	if (self.delegate && [self.delegate respondsToSelector:@selector(cameraController:didTakePicture:)]) {
-		[self.delegate cameraController:self didTakePicture:croppedImage];
+	if (self.delegate && [self.delegate respondsToSelector:@selector(cameraOverlayController:didTakePicture:)]) {
+		[self.delegate cameraOverlayController:self didTakePicture:croppedImage];
 	}
 }
 

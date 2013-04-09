@@ -23,7 +23,6 @@
 	self = [super init];
 	if (self) {
 		_cameraOverlayController = [[SVCameraOverlayController alloc] init];
-		_cameraPreviewController = [[SVCameraPreviewController alloc] init];
 		_cameraOverlayController.delegate = self;
 		_firstLoad = YES;
 	}
@@ -35,11 +34,6 @@
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor blackColor];
-	[self.view addSubview:self.cameraPreviewController.view];
-}
-
-- (void)viewWillLayoutSubviews {
-	self.cameraPreviewController.view.frame = self.view.bounds;
 }
 
 - (void)viewDidLoad
@@ -61,9 +55,25 @@
 
 #pragma mark - SVCameraOverlayControllerDelegate
 
-- (void)cameraController:(SVCameraOverlayController *)controller didTakePicture:(UIImage *)image {
+- (void)cameraOverlayController:(SVCameraOverlayController *)controller didTakePicture:(UIImage *)image {
+	if (!self.cameraPreviewController) {
+		self.cameraPreviewController = [[SVCameraPreviewController alloc] init];
+		self.cameraPreviewController.view.frame = self.view.bounds;
+		[self.view addSubview:self.cameraPreviewController.view];
+		self.cameraPreviewController.delegate = self;
+	}
 	[self.cameraPreviewController loadImage:image];
 	[self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+#pragma mark - SVCameraPreviewControllerDelegate
+
+- (void)cameraPreviewControllerDidRetry:(SVCameraPreviewController *)controller {
+	[self presentViewController:self.cameraOverlayController animated:YES completion:NULL];
+}
+
+- (void)cameraPreviewControllerDidSave:(SVCameraPreviewController *)controller {
+	[self presentViewController:self.cameraOverlayController animated:YES completion:NULL];
 }
 
 @end

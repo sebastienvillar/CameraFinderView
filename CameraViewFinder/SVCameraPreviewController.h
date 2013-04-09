@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+@class SVCameraPreviewController;
+
+@protocol SVCameraPreviewControllerDelegate <NSObject>
+- (void)cameraPreviewControllerDidRetry:(SVCameraPreviewController*)controller;
+- (void)cameraPreviewControllerDidSave:(SVCameraPreviewController*)controller;
+@end
 
 @interface SVCameraPreviewController : UIViewController
+@property (weak, readwrite) id delegate;
 - (void)loadImage:(UIImage*)image;
 @end
