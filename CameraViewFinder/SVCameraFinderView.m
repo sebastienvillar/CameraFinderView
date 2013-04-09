@@ -15,6 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
 		self.backgroundColor = [UIColor clearColor];
+		[self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -28,5 +29,10 @@
 	[path stroke];
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+	if ([keyPath isEqualToString:@"frame"]) {
+		[self setNeedsDisplay];
+	}
+}
 
 @end

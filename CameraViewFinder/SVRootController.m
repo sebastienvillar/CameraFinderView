@@ -28,15 +28,26 @@
 	return self;
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+	return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)loadViewController:(UIViewController*)controller {
+	[self addChildViewController:controller];
+	controller.view.frame = self.view.frame;
+	[self.view addSubview:controller.view];
+	[controller didMoveToParentViewController:self];
+}
+
 
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-	[self.view addSubview:self.childNavigationController.view];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	[self loadViewController:self.childNavigationController];
 }
 
 - (void)didReceiveMemoryWarning

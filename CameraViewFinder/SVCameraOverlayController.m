@@ -35,10 +35,41 @@
 	if (self) {
 		_imagePickerController = [[UIImagePickerController alloc] init];
 		[self configureImagePicker];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(orientationDidChange)
+													 name:@"UIDeviceOrientationDidChangeNotification"
+												   object:nil];
 	}
 	return self;
 }
 
+- (void)orientationDidChange {
+	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+	if (!UIDeviceOrientationIsValidInterfaceOrientation(orientation)) {
+		return;
+	}
+	CGRect bounds = self.overlayView.bounds;
+	[UIView animateWithDuration:0.3 animations:^{
+		if (UIDeviceOrientationIsLandscape(orientation)) {
+			CGSize cameraFinderSize = CGSizeMake((bounds.size.height - (cameraFinderBorderWidth * 2) - cameraControlHeight568) / cameraFinderWidthToHeightRatio,
+												 (bounds.size.height - cameraFinderBorderWidth * 2) - cameraControlHeight568);
+			
+			self.cameraFinderView.frame = CGRectMake((bounds.size.width)/2 - cameraFinderSize.width/2,
+													 cameraFinderBorderWidth,
+													 cameraFinderSize.width,
+													 cameraFinderSize.height);
+		}
+		else {
+			CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
+												 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
+			
+			self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
+													 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
+													 cameraFinderSize.width,
+													 cameraFinderSize.height);
+		}
+	}];
+}
 
 - (BOOL)configureImagePicker {
 	if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -62,8 +93,6 @@
 	return YES;
 }
 
-
-
 - (void)loadView {
 	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	self.overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -85,20 +114,32 @@
 - (void)viewWillLayoutSubviews {
 	CGRect bounds = self.overlayView.bounds;
 	CGRect controlsBounds = self.overlayControlsView.bounds;
-	CGSize buttonSize = CGSizeMake(100, 50);
+	CGSize buttonSize = CGSizeMake(125, 50);
+	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+
+	if (UIDeviceOrientationIsPortrait(orientation)) {
+		CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
+											 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
+		
+		self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
+												 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
+												 cameraFinderSize.width,
+												 cameraFinderSize.height);
+	}
+	else {
+		CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
+											 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
+		
+		self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
+												 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
+												 cameraFinderSize.width,
+												 cameraFinderSize.height);
+	}
 	
 	self.takePictureButton.frame = CGRectMake(controlsBounds.size.width/2 - buttonSize.width/2,
 											  controlsBounds.size.height/2 - buttonSize.height/2,
 											  buttonSize.width,
 											  buttonSize.height);
-	
-	CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
-										(bounds.size.width - cameraFinderBorderWidth) / cameraFinderWidthToHeightRatio);
-	
-	self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
-											 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
-											 cameraFinderSize.width,
-											 cameraFinderSize.height);
 }
 
 - (void)viewDidLoad
