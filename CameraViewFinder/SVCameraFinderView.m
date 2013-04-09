@@ -38,4 +38,8 @@
 	}
 }
 
+- (void)dealloc {
+	[self removeObserver:self forKeyPath:@"frame"];
+}
+
 @end

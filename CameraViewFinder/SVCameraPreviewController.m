@@ -95,8 +95,21 @@
 
 - (void)save {
 	UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
-	if (self.delegate && [self.delegate respondsToSelector:@selector(cameraPreviewControllerDidSave:)]) {
-		[self.delegate cameraPreviewControllerDidSave:self];
+	UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Saved"
+														message:@"The image was saved in camera roll"
+													   delegate:self
+											  cancelButtonTitle:nil
+											  otherButtonTitles:@"Ok",nil];
+	[alertView show];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == 0) {
+		if (self.delegate && [self.delegate respondsToSelector:@selector(cameraPreviewControllerDidSave:)]) {
+			[self.delegate cameraPreviewControllerDidSave:self];
+		}
 	}
 }
 

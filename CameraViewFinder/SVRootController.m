@@ -44,6 +44,7 @@
 - (void)viewDidAppear:(BOOL)animated {
 	if (self.isFirstLoad) {
 		self.firstLoad = NO;
+		[UIApplication sharedApplication].statusBarHidden = YES;
 		[self presentViewController:self.cameraOverlayController animated:NO completion:NULL];
 	}
 }
@@ -63,6 +64,7 @@
 		self.cameraPreviewController.delegate = self;
 	}
 	[self.cameraPreviewController loadImage:image];
+	[UIApplication sharedApplication].statusBarHidden = NO;
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 

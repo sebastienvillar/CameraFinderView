@@ -14,7 +14,7 @@
 - (void)cameraPreviewControllerDidSave:(SVCameraPreviewController*)controller;
 @end
 
-@interface SVCameraPreviewController : UIViewController
+@interface SVCameraPreviewController : UIViewController <UIAlertViewDelegate>
 @property (weak, readwrite) id delegate;
 - (void)loadImage:(UIImage*)image;
 @end

@@ -11,7 +11,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 
-#define cameraControlHeight568 76
+#define cameraControlHeight568 96
 #define cameraFinderBorderWidth 10
 #define cameraFinderWidthToHeightRatio 1.586
 
@@ -67,14 +67,14 @@
 												 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
 			
 			self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
-													 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
+													 (bounds.size.height - cameraControlHeight568) / 2 - cameraFinderSize.height/2,
 													 cameraFinderSize.width,
 													 cameraFinderSize.height);
 		}
 	}];
 }
 
-//Return YES if the device is supports the camera. NO otherwise
+//Return YES if the device supports the camera, NO otherwise
 //If YES, configure the imagePickerController
 - (BOOL)configureImagePicker {
 	if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -100,14 +100,12 @@
 
 - (UIImage*)croppedImageToFinder:(UIImage*)image {
 	CGRect finderRect = self.cameraFinderView.frame;
-	finderRect.size.width -= 2 * innerBorder;
-	finderRect.size.height -= 2 * innerBorder;
 	float ratio;
 	if (image.size.height > image.size.width) {
-		ratio = image.size.height / (self.overlayView.frame.size.height - cameraControlHeight568);
+		ratio = image.size.width / (self.overlayView.frame.size.width - self.overlayControlsView.frame.size.height);
 	}
 	else {
-		ratio = image.size.width / (self.overlayView.frame.size.height - cameraControlHeight568);
+		ratio = image.size.width / (self.overlayView.frame.size.height - self.overlayControlsView.frame.size.height);
 		finderRect = CGRectMake(CGRectGetMinX(finderRect),
 								CGRectGetMinY(finderRect),
 								finderRect.size.height,
@@ -120,16 +118,26 @@
 									   imageCenter.y - (CGRectGetHeight(finderRect)/2 * ratio),
 									   CGRectGetWidth(finderRect) * ratio,
 									   CGRectGetHeight(finderRect) * ratio);
+	
+	//Take half of the border in the picture
+	//realFinderRect = CGRectInset(realFinderRect, innerBorder/2 * ratio, innerBorder/2 * ratio);
 	UIBezierPath* translatedFinderBezier = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,
 																							  CGRectGetWidth(realFinderRect),
 																							  CGRectGetHeight(realFinderRect))
 																	  cornerRadius:finderCornerRadius * ratio];
-	UIGraphicsBeginImageContext(realFinderRect.size);
+	NSLog(@"rect : %@", NSStringFromCGRect(self.cameraFinderView.frame));
+	NSLog(@"%@", NSStringFromCGSize(image.size));
+	NSLog(@"%@", NSStringFromCGRect(self.overlayView.frame));
+	NSLog(@"%@", NSStringFromCGRect(realFinderRect));
+	UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:realFinderRect cornerRadius:finderCornerRadius * ratio];
+	UIGraphicsBeginImageContext(image.size);
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	[[UIColor blackColor] setFill];
 	CGContextFillRect(context, CGRectMake(0, 0, image.size.width, image.size.height));
-	[translatedFinderBezier addClip];
-	[image drawAtPoint:CGPointMake(-CGRectGetMinX(realFinderRect), -CGRectGetMinY(realFinderRect))];
+	//[translatedFinderBezier addClip];
+	[bezierPath addClip];
+	//[image drawAtPoint:CGPointMake(-CGRectGetMinX(realFinderRect), -CGRectGetMinY(realFinderRect))];
+	[image drawAtPoint:CGPointZero];
 	UIImage* croppedImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	return croppedImage;
@@ -176,12 +184,12 @@
 	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
 
 	//Set the cameraFinderView's frame according to the device orientation
-	if (UIDeviceOrientationIsPortrait(orientation)) {
-		CGSize cameraFinderSize = CGSizeMake(bounds.size.width - cameraFinderBorderWidth * 2,
-											 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
+	if (UIDeviceOrientationIsLandscape(orientation)) {
+		CGSize cameraFinderSize = CGSizeMake((bounds.size.height - (cameraFinderBorderWidth * 2) - cameraControlHeight568) / cameraFinderWidthToHeightRatio,
+											 (bounds.size.height - cameraFinderBorderWidth * 2) - cameraControlHeight568);
 		
-		self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
-												 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
+		self.cameraFinderView.frame = CGRectMake((bounds.size.width)/2 - cameraFinderSize.width/2,
+												 cameraFinderBorderWidth,
 												 cameraFinderSize.width,
 												 cameraFinderSize.height);
 	}
@@ -190,7 +198,7 @@
 											 (bounds.size.width - cameraFinderBorderWidth * 2) / cameraFinderWidthToHeightRatio);
 		
 		self.cameraFinderView.frame = CGRectMake(cameraFinderBorderWidth,
-												 (bounds.size.height - cameraControlHeight568)/2 - cameraFinderSize.height/2,
+												 (bounds.size.height - cameraControlHeight568)/ 2 - cameraFinderSize.height/2,
 												 cameraFinderSize.width,
 												 cameraFinderSize.height);
 	}
@@ -207,6 +215,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 	[self viewWillLayoutSubviews];
 	[self presentViewController:self.imagePickerController animated:NO completion:NULL];
 }
